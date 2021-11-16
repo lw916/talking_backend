@@ -1,0 +1,4 @@
+class Const
+  JWT_KEY = "123456"
+  TOKEN_EXPIRE_TIME = 604800
+end
