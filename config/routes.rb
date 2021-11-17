@@ -7,4 +7,7 @@ Rails.application.routes.draw do
   post '/upload_avatar' => 'login#upload_avatar'
   post '/avatar' => 'login#avatar'
 
+  post '/comment' => 'comment#create'
+  get '/comment' => 'comment#index'
+
 end
