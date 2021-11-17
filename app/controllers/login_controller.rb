@@ -30,7 +30,7 @@ class LoginController < ApplicationController
           :status => @user.status
         }
       )
-      render :json => { "status" => 1, :msg => "登陆成功", :token => token, :email => @user.email, :id => @user.id }
+      render :json => { "status" => 1, :msg => "登陆成功", :token => token, :email => @user.email, :id => @user.id, :avatar => @user.avatar }
       nil
     else
       render :json => { :status => 0, :msg => "密码错误", :token => nil }
@@ -97,7 +97,7 @@ class LoginController < ApplicationController
       return
     end
 
-    if User.create(:username => user_params[:username], :password => user_params[:password], :email => user_params[:email], :status => 1)
+    if User.create(:username => user_params[:username], :password => user_params[:password], :email => user_params[:email], :status => 1, :avatar => Const::DEFAULT_AVATAR)
       render :json => { :status =>1, :msg => "注册成功" }
       nil
     else
@@ -121,7 +121,7 @@ class LoginController < ApplicationController
 
     @user.avatar = user_params["avatar"]
     if @user.save!
-      render :json => { :status => 1, :msg => "上传成功" }
+      render :json => { :status => 1, :msg => "上传成功", :avatar => @user.avatar }
       nil
     else
       render :json => { :status => 0, :msg => "后台系统错误" }
