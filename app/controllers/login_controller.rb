@@ -83,7 +83,6 @@ class LoginController < ApplicationController
 
   # 注册用户
   def register
-
     # 账户邮箱未传入
     if user_params[:username].blank? or user_params[:email].blank? or user_params[:password].blank?
       render :json => { :status => -1, :msg => "账户或密码或邮箱未传入" }
@@ -98,10 +97,34 @@ class LoginController < ApplicationController
     end
 
     if User.create(:username => user_params[:username], :password => user_params[:password], :email => user_params[:email], :status => 1, :avatar => Const::DEFAULT_AVATAR)
-      render :json => { :status =>1, :msg => "注册成功" }
+      render :json => { :status => 1, :msg => "注册成功" }
       nil
     else
       render :json => { :status => 0, :msg => "注册失败" }
+      nil
+    end
+  end
+
+  # 重置密码
+  def reset
+    if user_params[:username].blank? or user_params[:password].blank?
+      render :json => { :status => -1, :msg => "账户或密码未传入" }
+      return
+    end
+
+    @user = User.find_by_username(user_params[:username])
+    # 用户不存在
+    unless @user.blank?
+      render :json => { :status => -2, :msg => "用户已存在" }
+      return
+    end
+
+    @user.password = user_params[:password]
+    if @user.save!
+      render :json => { :status => 1, :msg => "修改密码成功" }
+      nil
+    else
+      render :json => { :status => 0, :msg => "修改密码错误" }
       nil
     end
   end
