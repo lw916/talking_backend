@@ -11,8 +11,9 @@ class TalkingChannel < ApplicationCable::Channel
         user_online
         stream_from "channel_#{params[:channel_id]}" # 公共频道（含语音，可文字）
         stream_from "channel_person_#{current_user[:username]}" # 个人频道（用于心跳连接检测是否断连，当前频道有人讲话时占用频道）
+        ping
         notification("in") # 提示用户进入房间/频道
-        # ping
+
       end
     else
       ActionCable.server.remote_connections.where(current_user: current_user).disconnect # 断连该用户
