@@ -62,7 +62,7 @@ module ApplicationCable
 
     # 获取token
     def http_token
-      @http_token ||= request.params[:token]
+      @http_token ||= request.headers['token']
     end
 
     # 解析token获取信息
