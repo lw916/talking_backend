@@ -45,7 +45,7 @@ class LoginController < ApplicationController
   end
 
   # 重置密码
-  def reset
+  def forget
     # 账户邮箱未传入
     if user_params[:username].blank? or user_params[:email].blank? or user_params[:password].blank?
       render :json => { :status => -1, :msg => "账户或密码或邮箱未传入" }
@@ -114,8 +114,8 @@ class LoginController < ApplicationController
 
     @user = User.find_by_username(user_params[:username])
     # 用户不存在
-    unless @user.blank?
-      render :json => { :status => -2, :msg => "用户已存在" }
+    if @user.blank?
+      render :json => { :status => -2, :msg => "用户不存在" }
       return
     end
 

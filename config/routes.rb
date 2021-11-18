@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   post '/login' => 'login#login'
   post '/logout' => 'login#logout'
+  post '/forget' => 'login#forget'
   post '/reset' => 'login#reset'
   post '/register' => 'login#register'
   post '/upload_avatar' => 'login#upload_avatar'
