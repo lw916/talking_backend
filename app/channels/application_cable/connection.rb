@@ -47,6 +47,7 @@ module ApplicationCable
         nil
       else
         current_user = payload
+
         transmit( code: Const::CONNECTION_SUCCESS, msg: "连接成功" )
         current_user
       end
