@@ -86,6 +86,12 @@ class TalkingChannel < ApplicationCable::Channel
     keep_alive
   end
 
+  def msg(data)
+    ActionCable.server.broadcast "channel_#{data["channel_id"]}",
+                            type: "message",
+                            content: data["content"]
+  end
+
   # 通话结束
   def over(channel_id)
     if $Talk_lock.del(channel_id)
@@ -147,7 +153,7 @@ class TalkingChannel < ApplicationCable::Channel
   end
 
   # 获取当前频道的在线用户列表
-  def user_list()
+  def user_list
     begin
       # 获取用户列表
       puts params[:channel_id]
