@@ -26,44 +26,34 @@ module ApplicationCable
 
     # 自定义心跳连接函数
     def beat
-      transmit( type: ActionCable::INTERNAL[:message_types][:ping], message: Time.now.to_i )
+      # transmit( type: ActionCable::INTERNAL[:message_types][:ping], message: Time.now.to_i )
     end
 
     # 获取用户信息，并判断用户是否已经登陆
     def get_user_detail
-      puts http_token
-      puts payload
       # 判断token是否存在/token是否有效/token是否携带用户信息
       if http_token.blank? or !payload or !payload[:username].to_s
         transmit( code: Const::CONNECTION_AUTHENTICATION_FAIL, msg: "未认证用户" )
         websocket.close
-        return nil
+        # 判断当前用户是否登陆
+      elsif not $Connection_lock.get(payload[:user_id]).blank?
+        transmit( code: Const::IS_LOGIN, type: "isLogin", msg: "该用户已登录，不允许多点登录" )
+        websocket.close # 断连该用户
       end
-
-      # 判断当前用户是否登陆
-      if not $Connection_lock.get(payload[:user_id]).blank?
-        transmit( code: Const::IS_LOGIN,  msg: "该用户已登陆" )
-        websocket.close
-        nil
-      else
-        current_user = payload
-
-        transmit( code: Const::CONNECTION_SUCCESS, msg: "连接成功" )
-        current_user
-      end
+      payload
     end
 
     # 断开连接时需要操作函数
     def user_disconnect
       # 用户锁解除 / 防止挤号
-      if self.current_user
-        $Connection_lock.del(self.current_user[:user_id])
-      end
+      # if self.current_user
+      #   $Connection_lock.del(self.current_user[:user_id])
+      # end
     end
 
     # 获取token
     def http_token
-      @http_token ||= request.headers['token']
+      @http_token ||= request.headers['token'] or request.params['token']
     end
 
     # 解析token获取信息

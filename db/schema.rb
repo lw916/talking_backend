@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_17_063051) do
+ActiveRecord::Schema.define(version: 2021_11_15_020435) do
 
   create_table "channels", charset: "utf8mb4", force: :cascade do |t|
     t.string "channel_name"
@@ -21,13 +21,6 @@ ActiveRecord::Schema.define(version: 2021_11_17_063051) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["channel_name"], name: "index_channels_on_channel_name"
-  end
-
-  create_table "comments", charset: "utf8mb4", force: :cascade do |t|
-    t.text "comments"
-    t.string "created_user", limit: 40
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "messages", charset: "utf8mb4", force: :cascade do |t|
