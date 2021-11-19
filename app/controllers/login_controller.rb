@@ -136,7 +136,7 @@ class LoginController < ApplicationController
       return
     end
 
-    @user = User.find_by(user_params["id"])
+    @user = User.find(user_params["id"])
     if @user.blank?
       render :json => { :status => -2, :msg => "没有该用户" }
       return
