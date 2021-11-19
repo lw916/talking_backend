@@ -35,7 +35,7 @@ class TalkingChannel < ApplicationCable::Channel
 
   def list
     validate_params # 验证输入表单
-    user_list(params[:channel_id])  # 验证成功返回数据
+    user_list # 验证成功返回数据
   end
 
   # 占用频道禁止其他用户通话
