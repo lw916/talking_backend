@@ -27,7 +27,8 @@ class LoginController < ApplicationController
       token = Token.encode(
         {
           :username => @user.username,
-          :status => @user.status
+          :status => @user.status,
+          :user_id => @user.id
         }
       )
       render :json => { "status" => 1, :msg => "登陆成功", :token => token, :email => @user.email, :id => @user.id, :avatar => @user.avatar }

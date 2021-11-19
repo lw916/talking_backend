@@ -8,7 +8,7 @@ class TalkingChannel < ApplicationCable::Channel
 
     stop_all_streams # 进入新频道前，停止所有其他频道的串流
     stream_from "channel_#{params[:channel_id]}" # 公共频道（含语音，可文字）
-    stream_from "channel_person_#{current_user[:username]}" # 个人频道（用于心跳连接检测是否断连，当前频道有人讲话时占用频道）
+    stream_from "channel_person_#{current_user[:user_id]}" # 个人频道（用于心跳连接检测是否断连，当前频道有人讲话时占用频道）
 
     if validate_params
       # 判断连接用户是否合法
@@ -58,10 +58,7 @@ class TalkingChannel < ApplicationCable::Channel
       end
     else
       # 通过个人频道通知用户有人讲话中，禁止占用频道
-      ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                   type: "isTalking",
-                                   code: -1,
-                                   action: "occupy", # 动作：占用
+      transmit type: "isTalking", code: -1, action: "occupy", # 动作：占用
                                    msg: "用户#{user}正在讲话"
     end
   end
@@ -71,9 +68,7 @@ class TalkingChannel < ApplicationCable::Channel
     data = HashWithIndifferentAccess.new(data)
     puts data
     if data[:channel_id].blank?
-      ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                   type: "errorChannel",
-                                   msg: "频道id为空"
+      transmit type: "errorChannel", msg: "频道id为空"
     else
       ActionCable.server.broadcast "channel_#{data[:channel_id]}",
                                    type: "audio", # 动作： 语音消息
@@ -105,10 +100,7 @@ class TalkingChannel < ApplicationCable::Channel
   def validate_params
     # 判断是否传入频道id
     if params[:channel_id].blank?
-      ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                   type: "errorChannel",
-                                   code: Const::SUBSCRIBE_CHANNEL_BLANK,
-                                   msg: "频道id为空"
+      transmit type: "errorChannel", code: Const::SUBSCRIBE_CHANNEL_BLANK, msg: "频道id为空"
       false
     else
       begin
@@ -116,10 +108,7 @@ class TalkingChannel < ApplicationCable::Channel
         Channel.find(params[:channel_id])
         true
       rescue ActiveRecord::RecordNotFound
-        ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                     type: "errorChannel",
-                                     code: Const::SUBSCRIBE_CHANNEL_NOT_EXIST,
-                                     msg: "频道不存在，请检查频道id"
+        transmit type: "errorChannel", code: Const::SUBSCRIBE_CHANNEL_NOT_EXIST, msg: "频道不存在，请检查频道id"
         false
       end
 
@@ -151,10 +140,9 @@ class TalkingChannel < ApplicationCable::Channel
   # 用户下线设置
   def user_offline
     $Connection_lock.del(current_user[:user_id])
+    set_user_status(params[:channel_id], false)
     notification("out") # 提示用户离开房间/频道
-    ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                 type: "user_out",
-                                 msg: "断开连接成功"
+    transmit type: "user_out", msg: "断开连接成功"
     ActionCable.server.remote_connections.where(current_user: current_user).disconnect
   end
 
@@ -167,15 +155,9 @@ class TalkingChannel < ApplicationCable::Channel
       puts Rails.cache.read(params[:channel_id])
 
       # 返回用户列表
-      ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                   type: "userListSuccess",
-                                   msg: "获取在线用户列表成功",
-                                   user_list: user_list.to_json
+      transmit type: "userListSuccess", msg: "获取在线用户列表成功", user_list: user_list.to_json
     rescue
-      ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                   type: "userListFail",
-                                   msg: "获取在线用户列表失败",
-                                   user_list: nil
+      transmit type: "userListFail", msg: "获取在线用户列表失败", user_list: nil
     end
   end
 
@@ -230,19 +212,15 @@ class TalkingChannel < ApplicationCable::Channel
     Thread.new do
       while user_online? do
         if alive?
-          ActionCable.server.broadcast "channel_person_#{current_user[:username]}",
-                                       type: "PING",
-                                       msg: "PING",
-                                       timestamp: Time.now.to_i
+          transmit type: "PING", msg: "PING", timestamp: Time.now.to_i
+          sleep 3
         else
           user_offline
           ActionCable.server.remote_connections.where(current_user: current_user).disconnect
           Thread.exit
         end
-        sleep 3
       end
       release_channel
-      user_offline
       Thread.exit
     end
   end
