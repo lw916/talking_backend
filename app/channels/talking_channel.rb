@@ -139,6 +139,7 @@ class TalkingChannel < ApplicationCable::Channel
     list[current_user[:username]]= status
     # 写入用户列表缓存中
     Rails.cache.write(channel_id, list)
+
   end
 
   # 用户上线时：

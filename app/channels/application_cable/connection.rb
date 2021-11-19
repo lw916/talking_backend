@@ -31,6 +31,8 @@ module ApplicationCable
 
     # 获取用户信息，并判断用户是否已经登陆
     def get_user_detail
+      puts http_token
+      puts payload
       # 判断token是否存在/token是否有效/token是否携带用户信息
       if http_token.blank? or !payload or !payload[:username].to_s
         transmit( code: Const::CONNECTION_AUTHENTICATION_FAIL, msg: "未认证用户" )
