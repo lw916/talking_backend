@@ -24,6 +24,27 @@ class LoginController < ApplicationController
     end
 
     if @user.password == user_params[:password]
+      # 获取该用户拥有的频道
+      @channel_list = ChannelUser.select(:channel_id).where(:username => user_params[:username])
+      channel_list = []
+      @channel_list.each do |item|
+        channel_list.append(item["channel_id"])
+      end
+
+      # 通过列表查询频道信息
+      @channel = Channel.where(:id => channel_list.split(","))
+      channels = {}
+      @channel.each do |item|
+        channels[item.id] = item.channel_name
+      end
+
+      # 通过列表查用户可联系用户
+      @contact = ChannelUser.where(:channel_id => channel_list.split(","))
+      friends = {}
+      @contact.each do |item|
+        friends[item.user_id] = item.username
+      end
+
       token = Token.encode(
         {
           :username => @user.username,
@@ -31,7 +52,7 @@ class LoginController < ApplicationController
           :user_id => @user.id
         }
       )
-      render :json => { "status" => 1, :msg => "登陆成功", :token => token, :email => @user.email, :id => @user.id, :avatar => @user.avatar }
+      render :json => { "status" => 1, :msg => "登陆成功", :token => token, :email => @user.email, :id => @user.id, :avatar => @user.avatar, :channel => channels, :friends => friends }
       nil
     else
       render :json => { :status => 0, :msg => "密码错误", :token => nil }

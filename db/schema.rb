@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_15_020435) do
+ActiveRecord::Schema.define(version: 2021_11_22_112201) do
+
+  create_table "channel_users", charset: "utf8mb4", force: :cascade do |t|
+    t.integer "channel_id"
+    t.integer "user_id"
+    t.string "username", limit: 40
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "channels", charset: "utf8mb4", force: :cascade do |t|
     t.string "channel_name"
@@ -38,7 +46,7 @@ ActiveRecord::Schema.define(version: 2021_11_15_020435) do
     t.string "username", limit: 20, null: false
     t.string "password", limit: 40, null: false
     t.string "email", limit: 20, null: false
-    t.text "avatar"
+    t.text "avatar", size: :long
     t.integer "status", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
