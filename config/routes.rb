@@ -11,5 +11,6 @@ Rails.application.routes.draw do
   post '/comment' => 'comment#create'
   get '/comment' => 'comment#index'
   get '/avatar' => 'user#return_avatar'
+  get '/avatar_get' => 'user#return_all'
 
 end
