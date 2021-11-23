@@ -88,8 +88,9 @@ class TalkingChannel < ApplicationCable::Channel
 
   def msg(data)
     ActionCable.server.broadcast "channel_#{data["channel_id"]}",
-                            type: "message",
-                            content: data["content"]
+                                 to: "#{data["to"]}",
+                                 type: "message",
+                                 content: data["content"]
   end
 
   # 通话结束
