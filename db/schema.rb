@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2021_11_22_112201) do
 
-  create_table "channel_users", charset: "utf8mb4", force: :cascade do |t|
+  create_table "channel_users", charset: "utf8mb4", options: "ENGINE=InnoDB ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.integer "channel_id"
     t.integer "user_id"
     t.string "username", limit: 40
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_112201) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "channels", charset: "utf8mb4", force: :cascade do |t|
+  create_table "channels", charset: "utf8mb4", options: "ENGINE=InnoDB ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.string "channel_name"
     t.integer "maximum_talk"
     t.boolean "status"
@@ -31,7 +31,14 @@ ActiveRecord::Schema.define(version: 2021_11_22_112201) do
     t.index ["channel_name"], name: "index_channels_on_channel_name"
   end
 
-  create_table "messages", charset: "utf8mb4", force: :cascade do |t|
+  create_table "comments", charset: "utf8mb4", force: :cascade do |t|
+    t.text "comments"
+    t.string "created_user", limit: 40
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "messages", charset: "utf8mb4", options: "ENGINE=InnoDB ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.bigint "channel_id"
     t.text "message", size: :medium
     t.boolean "status"
@@ -42,7 +49,7 @@ ActiveRecord::Schema.define(version: 2021_11_22_112201) do
     t.index ["id"], name: "index_messages_on_id", unique: true
   end
 
-  create_table "users", charset: "utf8mb4", force: :cascade do |t|
+  create_table "users", charset: "utf8mb4", options: "ENGINE=InnoDB ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.string "username", limit: 20, null: false
     t.string "password", limit: 40, null: false
     t.string "email", limit: 20, null: false
