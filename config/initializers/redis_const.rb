@@ -14,3 +14,5 @@ $Online_time = Redis::Namespace.new(:Online_time, redis: redis_connection)
 $Online_user_list = Redis::Namespace.new(:Online_user_list, redis: redis_connection)
 # 频道语音锁
 $Talk_lock = Redis::Namespace.new(:Talk_lock, redis: redis_connection)
+# 登录锁
+$Login_lock = Redis::Namespace.new(:Login_loc, redis: redis_connection)

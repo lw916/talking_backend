@@ -90,6 +90,7 @@ class TalkingChannel < ApplicationCable::Channel
     ActionCable.server.broadcast "channel_#{data["channel_id"]}",
                                  to: "#{data["to"]}",
                                  type: "message",
+                                 msg_type: "#{data["type"]}",
                                  content: data["content"]
   end
 
