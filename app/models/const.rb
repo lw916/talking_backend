@@ -23,5 +23,22 @@ class Const
   SUBSCRIBE_CHANNEL_BLANK = -1
   SUBSCRIBE_CHANNEL_NOT_EXIST = -2
 
+  # notify表更新/轮询时间间隔
+  NOTIFY_REQUEST_TIME = 30
+
+
+  # 日志记录每页显示记录值
+  LOG_NUM = 10
+  # 返回参数集合
+  # 数字判断类
+  LOG_REQUEST_NOT_NUM = 2001
+  LOG_REQUEST_NOT_POSITIVE_NUMBER = 2002
+  # 请求错误参数返回
+  LOG_REQUEST_NOT_LEGAL = 3000
+  # 请求为空参数返回
+  LOG_RESPONSE_BLANK = 0
+  # 请求成功返回
+  LOG_RESPONSE_SUCCESS = 1000
+
 
 end

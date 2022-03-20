@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post '/register' => 'login#register'
   post '/upload_avatar' => 'login#upload_avatar'
   post '/avatar' => 'login#avatar'
+  post '/logs' => 'log#index'
 
   post '/comment' => 'comment#create'
   get '/comment' => 'comment#index'

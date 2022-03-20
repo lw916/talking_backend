@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_09_010630) do
+ActiveRecord::Schema.define(version: 2022_03_20_064026) do
 
   create_table "channel_users", charset: "utf8mb4", force: :cascade do |t|
     t.integer "channel_id"
@@ -29,6 +29,17 @@ ActiveRecord::Schema.define(version: 2022_03_09_010630) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["channel_name"], name: "index_channels_on_channel_name"
+  end
+
+  create_table "logs", charset: "utf8mb4", force: :cascade do |t|
+    t.string "roles"
+    t.string "username"
+    t.string "ip_addr"
+    t.text "action_type"
+    t.string "created_user"
+    t.string "updated_user"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "messages", charset: "utf8mb4", force: :cascade do |t|
