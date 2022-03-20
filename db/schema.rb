@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 2022_03_20_064026) do
     t.index ["id"], name: "index_messages_on_id", unique: true
   end
 
-  create_table "notifies", charset: "utf8mb4", force: :cascade do |t|
+  create_table "notify", charset: "utf8mb4", force: :cascade do |t|
     t.bigint "user_id"
     t.string "type"
     t.text "content"

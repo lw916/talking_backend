@@ -1,6 +1,8 @@
-class NotifyController < ApplicationController
+class NotifiesController < ApplicationController
 
   # 创建修改内容
+  # notify表字段:
+  # user_id type content
   def create
     # 判断用户id是否为空
     if notify_params[:user_id].blank?
@@ -15,7 +17,7 @@ class NotifyController < ApplicationController
       return
     end
 
-    @notify = Notify.new(:user_id => notify_params[:user_id], :type => notify_params[:type], :content => notify_params[:content])
+    @notify = Notifies.new(:user_id => notify_params[:user_id], :type => notify_params[:type], :content => notify_params[:content])
     if @notify.save!
       render :json => { :status => 1, :msg => '提交修改成功' }
     else
@@ -29,18 +31,18 @@ class NotifyController < ApplicationController
 
     # 判断是否传入时间戳，若是则按时间戳返回内容，否则按常量设定值返回内容
     if notify_params[:created_at].blank?
-      timeStamp = Time.now.to_i + Const.NOTIFY_REQUEST_TIME
+      timeStamp = Time.now.to_i - Const::NOTIFY_REQUEST_TIME
     else
       timeStamp = notify_params[:created_at]
     end
 
     # 查询通知表中按时间戳返回的内容是否为空
-    @notify = Notify.return_change_list(timeStamp)
+    @notify = Notifies.return_change_list(timeStamp)
 
     if @notify.blank?
-      render :json => { :status => 0, :msg => '提醒表中内容为空，无更新项目', :content_list => nil  }
+      render :json => { :status => 0, :msg => '提醒表中内容为空，无更新项目', :content_list => nil }
     else
-      render :json => { :status => 1, :msg => '提醒表中有数据，需要更新配置表', :content_list => @notify  }
+      render :json => { :status => 1, :msg => '提醒表中有数据，需要更新配置表', :content_list => @notify }
     end
     
   end
