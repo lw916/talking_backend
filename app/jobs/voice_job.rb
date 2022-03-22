@@ -1,9 +1,9 @@
 # encoding:utf-8
 # @Author: Wayne
-# @Date: 2022-3-22
+# @Date: 2021-9-6
 # 后台消息记录
 
-class MessageJob < ApplicationJob
+class VoiceJob < ApplicationJob
   queue_as :default
 
   def perform(data, current_user)
@@ -11,13 +11,11 @@ class MessageJob < ApplicationJob
     channel = Channel.find(data["channel_id"]) # 查找该频道
     unless channel.id.blank? # 若该频道存在时
       Message.create(
-        channel_id: data["channel_id"],
-        message: data["content"],
+        message: data[:voice],
         status: 1,
         username: current_user[:username]
-      ) # 数据库存入文字消息
+      ) # 数据库存入语音消息
     end
   end
 
 end
-

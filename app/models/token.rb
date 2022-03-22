@@ -1,5 +1,7 @@
 class Token
 
+
+
   # 生成token
   def self.encode(payload)
     payload.merge!(exp:(Time.now.to_i + Const::TOKEN_EXPIRE_TIME))

@@ -26,7 +26,7 @@ module ApplicationCable
 
     # 自定义心跳连接函数
     def beat
-      # transmit( type: ActionCable::INTERNAL[:message_types][:ping], message: Time.now.to_i )
+      transmit( type: ActionCable::INTERNAL[:message_types][:ping], message: Time.now.to_i )
     end
 
     # 获取用户信息，并判断用户是否已经登陆
@@ -48,9 +48,9 @@ module ApplicationCable
     # 断开连接时需要操作函数
     def user_disconnect
       # 用户锁解除 / 防止挤号
-      # if self.current_user
-      #   $Connection_lock.del(self.current_user[:user_id])
-      # end
+      if self.current_user
+        $Connection_lock.del(self.current_user[:user_id])
+      end
     end
 
     # 获取token

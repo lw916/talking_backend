@@ -6,7 +6,7 @@
 class Const
 
   # Redis数据库地址定义
-  REDIS_URL = "172.31.136.201" # Redis地址
+  REDIS_URL = "192.168.1.235" # Redis地址
   REDIS_PORT = 6379 # Redis端口
 
 

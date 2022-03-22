@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration[6.1]
       t.column :password, 'varchar(40)', :null => false
       t.column :email, 'varchar(20)', :null => false
       t.column :avatar, 'longtext'
+      t.column :utype, 'varchar(40)'
       t.column :status, 'int(0)', :null => false
       t.timestamps
     end

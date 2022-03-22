@@ -75,7 +75,7 @@ class TalkingChannel < ApplicationCable::Channel
                                    msg: "#{current_user[:user_id]}发了一段语音",
                                    voice: data[:voice]
       over(data[:channel_id])
-      MessageRecordJob.perform_later(data, current_user)
+      VoiceJob.perform_later(data, current_user)
     end
 
   end
@@ -92,6 +92,7 @@ class TalkingChannel < ApplicationCable::Channel
                                  type: "message",
                                  msg_type: "#{data["type"]}",
                                  content: data["content"]
+    MessageJob.perform_later(data, current_user)
   end
 
   # 通话结束
@@ -221,7 +222,7 @@ class TalkingChannel < ApplicationCable::Channel
       while user_online? do
         if alive?
           transmit type: "PING", msg: "PING", timestamp: Time.now.to_i
-          sleep 3
+          sleep 30
         else
           user_offline
           ActionCable.server.remote_connections.where(current_user: current_user).disconnect
