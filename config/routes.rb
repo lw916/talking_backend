@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   post '/login' => 'login#login'
+  get '/test' => 'login#test'
   post '/logout' => 'login#logout'
   post '/forget' => 'login#forget'
   post '/reset' => 'login#reset'
@@ -14,5 +15,7 @@ Rails.application.routes.draw do
   get '/comment' => 'comment#index'
   get '/avatar' => 'user#return_avatar'
   get '/avatar_get' => 'user#return_all'
+  get '/message' => 'message#index'
+  post '/message' => 'send#index'
 
 end

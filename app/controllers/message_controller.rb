@@ -11,19 +11,19 @@ class MessageController < ApplicationController
       return
     end
 
-    if payload['utype'] != 'admin'
-      render :json => { :status => 4001, :msg => '无权限拒绝请求' }
-      return
-    end
+    # if payload['utype'] != 'admin'
+    #   render :json => { :status => 4001, :msg => '无权限拒绝请求' }
+    #   return
+    # end
 
     sql = 'select * from messages '
     # 判断是否有用户名
     unless message_params[:username].blank?
-      sql << "where username = #{message_params[:username]} "
+      sql << "where username = '#{message_params[:username]}' "
     end
     # 判断是否有频道id
     unless message_params[:channel_id].blank?
-      sql << "where channel_id = #{message_params[:channel_id]} "
+      sql << "and channel_id = #{message_params[:channel_id]} "
     end
 
     @message_list = Message.find_by_sql(sql)
@@ -41,7 +41,7 @@ class MessageController < ApplicationController
 
   # 解析token获取信息
   def payload
-    @payload ||= Token.decode(http_token)
+    @payload ||= Token.decode(@http_token)
   end
 
 

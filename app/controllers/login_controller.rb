@@ -193,6 +193,10 @@ class LoginController < ApplicationController
     end
   end
 
+  def test
+    render :json => { :status => 1, :msg => "Success"}
+  end
+
   private
   # 安全原因，设置可传入的值
   def user_params

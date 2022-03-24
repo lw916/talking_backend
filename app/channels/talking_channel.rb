@@ -66,7 +66,6 @@ class TalkingChannel < ApplicationCable::Channel
   # 讲话完毕，语音消息发送调用函数
   def talk(data)
     data = HashWithIndifferentAccess.new(data)
-    puts data
     if data[:channel_id].blank?
       transmit type: "errorChannel", msg: "频道id为空"
     else
@@ -86,6 +85,7 @@ class TalkingChannel < ApplicationCable::Channel
     keep_alive
   end
 
+  # 文字消息发送与接收
   def msg(data)
     ActionCable.server.broadcast "channel_#{data["channel_id"]}",
                                  to: "#{data["to"]}",
@@ -202,7 +202,7 @@ class TalkingChannel < ApplicationCable::Channel
 
   # 判断用户是否在线（3次ping-pong）
   def alive?
-    Time.now.to_i - $Online_time.get(current_user[:username]).to_i < 10
+    Time.now.to_i - $Online_time.get(current_user[:username]).to_i < 200
   end
 
   # 释放频道语音锁
